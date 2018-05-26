@@ -27,6 +27,7 @@ private:
     std::uint8_t* begin;
     std::uint8_t* end;
     std::vector<std::uint8_t> buffer;
+    const std::uint8_t INVALID = -1;
 };
 
 } // ecio

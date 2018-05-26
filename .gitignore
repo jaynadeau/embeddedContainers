@@ -31,4 +31,11 @@
 *.out
 *.app
 
+# Folders
 .vscode/
+build/
+
+# CTAGS
+GPATH
+GRTAGS
+GTAGS
