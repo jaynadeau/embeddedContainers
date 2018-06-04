@@ -15,8 +15,9 @@ class basic_fdstreambuf : public std::streambuf
 {
 public:
     basic_fdstreambuf(const std::string filename)
+    : fd(INVALID)
     {
-        fd = ::open(filename.c_str(), O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+        fd = ::open(filename.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
         if(fd == INVALID)
         {
             // error
@@ -27,25 +28,36 @@ protected:
     {
         if(c != std::char_traits<char_type>::eof())
         {
-            std::size_t numBytesWritten = write(fd, &c, 1);
+            std::size_t numBytesWritten = ::write(fd, &c, 1);
             if(numBytesWritten == INVALID)
             {
                 // error
+                return std::char_traits<char_type>::eof();
             }
-            // if(putchar(c) == std::char_traits<char_type>::eof())
-            // {
-            //     return std::char_traits<char_type>::eof();
-            // }
         }
         return c;
     }
 
     virtual int_type underflow()
     {
+        if (fd == INVALID)
+        {
+            return std::char_traits<char_type>::eof();
+        }
+        int_type i = std::char_traits<char_type>::eof();
+        int numBytesRead = ::read(fd, &i, 1);
 
+        if(numBytesRead <= 0)
+        {
+            return std::char_traits<char_type>::eof();
+        }
+        else
+        {
+            char_type c = std::char_traits<char_type>::to_char_type(i);
+            setg(&c,&c,&c+1);
+        }
+        return i;
     }
-
-
 
 private:
     int fd;
