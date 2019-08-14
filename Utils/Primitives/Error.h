@@ -10,7 +10,10 @@ class Error
 {
 public:
     Error();
-    ~Error() {};
+    Error(const Error& other) = default;
+    ~Error() = default;
+
+    Error& operator=(const Error& rhs) = default;
 
     std::string getErrorDescription() const;
     int getErrorNumber() const;
@@ -19,6 +22,8 @@ public:
 private:
     std::string errorDescription;
     int errorNumber;
+
+    static constexpr int TMP_BUF_SIZE = 256;
 };
 
 }   // ecu
