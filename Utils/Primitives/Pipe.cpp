@@ -8,9 +8,9 @@ namespace util {
 Pipe::Pipe()
 {
     int fdArray[2];
-    if(pipe(fdArray))
+    if(pipe(fdArray) == -1)
     {
-        
+        // throw exception
     }
 }
 
