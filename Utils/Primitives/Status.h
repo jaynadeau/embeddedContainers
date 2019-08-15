@@ -1,75 +1,75 @@
-#ifndef UTILS_PRIMITIVES_STATUS_H
-#define UTILS_PRIMITIVES_STATUS_H
+#ifndef STATUS_H
+#define STATUS_H
 
-#include "Error.h"
+#include "CStdError.h"
 
 #include <string>
 #include <optional>
 
-namespace ecu
-{
+namespace ecu {
+namespace util {
 
 template <typename ResultType>
 class Status
 {
 public:
 
-    Status() 
-    : error{nullopt},
-      result{nullopt},
-      message{"Operation completed successfully."}
+    Status()
+    : mError{nullopt},
+      mResult{nullopt},
+      mMessage{"Operation completed successfully."}
     {}
 
     Status(const ResultType& r) 
-    : error{nullopt},
-      result{r},
-      message{"Operation completed successfully."}
+    : mError{nullopt},
+      mResult{r},
+      mMessage{"Operation completed successfully."}
     {}
 
-    Status::Status(const Error& error)
-    : opt{error},
-      result{nullopt},
-      message{error.getError()}
-    {}
-
-    Status(const ResultType& result, const Error& error) 
+    Status::Status(const CStdError& error)
     : error{error},
-      result{result},
-      message{error.getError()}
+      mResult{nullopt},
+      mMessage{mError.value().getError()}
+    {}
+
+    Status(const ResultType& result, const CStdError& error) 
+    : mError{error},
+      mResult{result},
+      mMessage{mError.value().getError()}
     {}
 
     Status(Status&& other)
-    : error{other.error},
-      result{other.result},
-      message{other.message}
+    : mError{other.mError},
+      mResult{other.mResult},
+      mMessage{other.mMessage}
     {
-        other.error.emplace(nullopt);
-        other.result.emplace(nullopt);
-        other.message = "Operation completed successfully.";
+        other.mError.emplace(nullopt);
+        other.mResult.emplace(nullopt);
+        other.mMessage = "";
     }
 
     Status(const Status& other)
-    : error{other.error},
-      result{other.result},
-      message{other.message}
+    : mError{other.mError},
+      mResult{other.mResult},
+      mMessage{other.mMessage}
     {}
 
     Status(const std::optional<ResultType>& other)
-    : error{nullopt},
-      result{other},
-      message{"Operation completed successfully."}
+    : mError{nullopt},
+      mResult{other},
+      mMessage{"Operation completed successfully."}
     {}
 
-    Status(const std::optional<Error>& other)
-    : error{other},
-      result{nullopt},
-      message{other.has_value()?other.value.getError():""}
+    Status(const std::optional<CStdError>& other)
+    : mError{other},
+      mResult{nullopt},
+      mMessage{other.has_value()?other.value().getError():""}
     {}
    
-    Status(const std::optional<ResultType>& otherResult, const std::optional<Error>& otherError)
-    : error{otherError},
-      result{otherResult},
-      message{other.has_value()?other.value.getError():""}
+    Status(const std::optional<ResultType>& otherResult, const std::optional<CStdError>& otherError)
+    : mError{otherError},
+      mResult{otherResult},
+      mMessage{otherError.has_value()?otherError.value().getError():""}
     {}
 
     virtual ~Status();
@@ -79,9 +79,9 @@ public:
         if(&rhs == this)
             return *this;
 
-        error = rhs.error;
-        result = rhs.result;
-        message = rhs.message;
+        mError = rhs.mError;
+        mResult = rhs.mResult;
+        mMessage = rhs.mMessage;
         return *this;
     }
 
@@ -90,65 +90,68 @@ public:
         if(&rhs == this)
             return *this;
 
-        error = rhs.error;
-        rhs.error = nullopt;
-        result = rhs.result;
-        rhs.result = nullopt;
-        message = rhs.message;
-        rhs.message = "";
+        mError = rhs.mError;
+        rhs.mError = nullopt;
+        mResult = rhs.mResult;
+        rhs.mResult = nullopt;
+        mMessage = rhs.mMessage;
+        rhs.mMessage = "";
         return *this;
     }
 
     void createError()
     {
-        Error error;
-        error.emplace(error);
-        result.emplace(nullopt);
-        message = error.getError();
+        CStdError error;
+        mError.emplace(error);
+        mResult.emplace(nullopt);
+        mMessage = mError.value().getError();
     }
 
-    void createError(const Error& error)
+    void createError(const CStdError& error)
     {
-        error.emplace(error);
-        result.emplace(nullopt);
-        message = error.getError();
+        mError.emplace(error);
+        mResult.emplace(nullopt);
+        mMessage = mError.value().getError();
     }
 
     void createSuccess()
     {
-        error.emplace(nullopt);
-        result.emplace(nullopt);
-        message = "Operation completed successfully.";
+        mError.emplace(nullopt);
+        mResult.emplace(nullopt);
+        mMessage = "Operation completed successfully.";
     }
 
     void createSuccess(const ResultType& result)
     {
-        error.emplace(nullopt);
-        result.emplace(result);
-        message = "Operation completed successfully.";
+        mError.emplace(nullopt);
+        mResult.emplace(result);
+        mMessage = "Operation completed successfully.";
     }
 
     std::string getMessage() const
     {
-        return message;
+        return mMessage;
     }
 
     bool hasResult() const
     {
-        return result.has_value();
+        return mResult.has_value();
     }
 
     bool hasError() const
     {
-        return error.has_value();
+        return mError.has_value();
     }
+
+    static constexpr int SYSTEM_ERROR = -1;
     
 private:
-    std::optional<Error> error;
-    std::optional<ResultType> result;
-    std::string message;
+    std::optional<CStdError> mError;
+    std::optional<ResultType> mResult;
+    std::string mMessage;
 };
 
-}   // ecu
+} // util
+} // ecu
 
-#endif  // UTILS_PRIMITIVES_STATUS_H
+#endif  // STATUS_H

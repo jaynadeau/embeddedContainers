@@ -6,15 +6,16 @@
 
 using namespace std;
 
-namespace ecu
+namespace ecu {
+namespace util
 {
 
 Descriptor::Descriptor(const string& path, const DescriptorModes mode)
-:   path{path},
-    fileDescriptor{INVALID},
-    isOpen{false}
+:   mPath{path},
+    mFileDescriptor{INVALID},
+    mIsOpen{false}
 {
-    open(path, mode);
+    open(mPath, mode);
 }
 
 Descriptor::~Descriptor()
@@ -25,9 +26,9 @@ Descriptor::~Descriptor()
 Status Descriptor::close()
 {
     Status status;
-    path = "";
+    mPath = "";
     isOpen = false;
-    if(::close(fileDescriptor) == Status::SYSTEM_ERROR)
+    if(::close(mFileDescriptor) == Status::SYSTEM_ERROR)
     {
         status.createError();
     }
@@ -36,25 +37,26 @@ Status Descriptor::close()
 
 Status Descriptor::open(const string& newPath, const DescriptorModes mode)
 {
-    path = newPath;
-    isOpen = true;
+    mPath = newPath;
+    mIsOpen = true;
     Status status;
-    if((fileDescriptor = ::open(path.c_str(), static_cast<int>(mode))) == Status::SYSTEM_ERROR)
+    if((mFileDescriptor = ::open(path.c_str(), static_cast<int>(mode))) == Status::SYSTEM_ERROR)
     {
-        isOpen = false;
         status.createError();
+        mIsOpen = false;
     }
     return status;
 }
 
 int Descriptor::getDescriptor() const
 {
-    return fileDescriptor;
+    return mFileDescriptor;
 }
 
 string Descriptor::getPath() const
 {
-    return path;
+    return mPath;
 }
 
-};
+} // util
+} // ecu

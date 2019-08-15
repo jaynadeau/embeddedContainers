@@ -1,5 +1,5 @@
-#ifndef UTILS_PRIMITIVES_DESCRIPTOR_H
-#define UTILS_PRIMITIVES_DESCRIPTOR_H
+#ifndef DESCRIPTOR_H
+#define DESCRIPTOR_H
 
 #include "Status.h"
 
@@ -8,8 +8,8 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-namespace ecu
-{
+namespace ecu {
+namespace util {
 
 class Descriptor
 {
@@ -47,12 +47,12 @@ public:
     int getDescriptor() const;
     std::string getPath() const;
 private:
-    std::string path;
-    int fileDescriptor;
-    bool isOpen;
-
+    std::string mPath;
+    int mFileDescriptor;
+    bool mIsOpen;
 };
 
-}   // ecu
+} // util
+} // ecu
 
-#endif  // UTILS_PRIMITIVES_DESCRIPTOR_H
+#endif  // DESCRIPTOR_H
