@@ -10,12 +10,23 @@ namespace ecu {
 namespace util
 {
 
-Descriptor::Descriptor(const string& path, const DescriptorModes mode)
+Descriptor::Descriptor(const string& path, const DescriptorFlags flags, const FileCreationModes modes)
 :   mPath{path},
     mFileDescriptor{INVALID},
     mIsOpen{false}
 {
-    open(mPath, mode);
+    open(mPath, flags, modes);
+}
+
+Descriptor::Descriptor(int fileDescriptor, const std::string& path)
+:   mPath{path},
+    mFileDescriptor{fileDescriptor}
+{
+    mIsOpen = false;
+    if(mFileDescriptor != INVALID)
+    {
+        mIsOpen = true;
+    }
 }
 
 Descriptor::~Descriptor()
@@ -32,16 +43,27 @@ Status Descriptor::close()
     {
         status.createError();
     }
+    mFileDescriptor = INVALID;
     return status;
 }
 
-Status Descriptor::open(const string& newPath, const DescriptorModes mode)
+Status Descriptor::open(const string& newPath, const DescriptorFlags flags, const FileCreationModes modes)
 {
     mPath = newPath;
     mIsOpen = true;
     Status status;
-    if((mFileDescriptor = ::open(path.c_str(), static_cast<int>(mode))) == Status::SYSTEM_ERROR)
+    if(modes == FileCreationModes::NONE)
     {
+        mFileDescriptor = ::open(path.c_str(), static_cast<int>(flags));
+    }
+    else
+    {
+        mFileDescriptor = ::open(path.c_str(), static_cast<int>(flags), static_cast<mode_t>(modes));
+    }
+
+    if(mFileDescriptor == Status::SYSTEM_ERROR)
+    {
+        mFileDescriptor = INVALID;
         status.createError();
         mIsOpen = false;
     }
@@ -56,6 +78,11 @@ int Descriptor::getDescriptor() const
 string Descriptor::getPath() const
 {
     return mPath;
+}
+
+bool Descriptor::isValid() const
+{
+    return (INVALID == mFileDescriptor);
 }
 
 } // util
