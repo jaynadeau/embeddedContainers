@@ -138,6 +138,15 @@ public:
         return mResult.has_value();
     }
 
+    ResultType getResult() const
+    {
+        if(hasResult())
+        {
+            return mResult.value();
+        }
+        return ResultType{};
+    }
+
     bool hasError() const
     {
         return mError.has_value();

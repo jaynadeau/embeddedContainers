@@ -67,8 +67,9 @@ public:
 
     // assignment
 
-    Status open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
     Status close();
+    Status open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
+    Status duplicate();
 
     int getDescriptor() const;
     std::string getPath() const;

@@ -70,6 +70,17 @@ Status Descriptor::open(const string& newPath, const DescriptorFlags flags, cons
     return status;
 }
 
+Status Descriptor::duplicate(const Descriptor newDescriptor)
+{
+    Status status;
+    if(::dup2(mFileDescriptor, newDescriptor) == Status::SYSTEM_ERROR)
+    {
+        status.createError();
+        return status;
+    }
+    return status;
+}
+
 int Descriptor::getDescriptor() const
 {
     return mFileDescriptor;

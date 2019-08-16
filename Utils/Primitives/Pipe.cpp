@@ -1,5 +1,8 @@
 #include "Pipe.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include <unistd.h>
 
 namespace ecu {
@@ -12,6 +15,7 @@ Pipe::Pipe()
     {
         // throw exception
     }
+    std::copy(std::begin(fdArray), std::end(fdArray), std::begin(mDescriptors));
 }
 
 } // util
