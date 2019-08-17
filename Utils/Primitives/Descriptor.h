@@ -32,7 +32,7 @@ public:
         SET_USER_ID_BIT     = S_ISUID,
         SET_GROUP_ID_BIT    = S_ISGID,
         SET_STICKY_BIT      = S_ISVTX,
-        NONE                = -1,
+        NONE                = 0,
     };
     
     enum class DescriptorFlags : unsigned int
@@ -55,7 +55,6 @@ public:
         DIRECT_IO           = O_DIRECT,
         IS_DIRECTORY_ONLY   = O_DIRECTORY,
         NOFOLLOW_SYM_LINKS  = O_NOFOLLOW,
-        INIT_TTY_PARAMS     = O_TTY_INIT,
     };
 
     static constexpr int INVALID = -1;
@@ -67,9 +66,9 @@ public:
 
     // assignment
 
-    Status close();
-    Status open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
-    Status duplicate();
+    Status<int> close();
+    Status<int> open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
+    Status<int> duplicate(const Descriptor& newDescriptor);
 
     int getDescriptor() const;
     std::string getPath() const;

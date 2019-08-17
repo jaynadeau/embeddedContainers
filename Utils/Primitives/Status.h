@@ -72,7 +72,7 @@ public:
       mMessage{otherError.has_value()?otherError.value().getError():""}
     {}
 
-    virtual ~Status();
+    virtual ~Status() = default;
 
     Status& operator=(const Status& rhs)
     {

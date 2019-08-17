@@ -1,6 +1,6 @@
 #include "Descriptor.h"
 
-#include "Error.h"
+#include "CStdError.h"
 
 #include <unistd.h>
 
@@ -34,12 +34,12 @@ Descriptor::~Descriptor()
     close();
 }
 
-Status Descriptor::close()
+Status<int> Descriptor::close()
 {
-    Status status;
+    Status<int> status;
     mPath = "";
-    isOpen = false;
-    if(::close(mFileDescriptor) == Status::SYSTEM_ERROR)
+    mIsOpen = false;
+    if(::close(mFileDescriptor) == Status<void>::SYSTEM_ERROR)
     {
         status.createError();
     }
@@ -47,21 +47,21 @@ Status Descriptor::close()
     return status;
 }
 
-Status Descriptor::open(const string& newPath, const DescriptorFlags flags, const FileCreationModes modes)
+Status<int> Descriptor::open(const string& newPath, const DescriptorFlags flags, const FileCreationModes modes)
 {
     mPath = newPath;
     mIsOpen = true;
-    Status status;
+    Status<int> status;
     if(modes == FileCreationModes::NONE)
     {
-        mFileDescriptor = ::open(path.c_str(), static_cast<int>(flags));
+        mFileDescriptor = ::open(mPath.c_str(), static_cast<int>(flags));
     }
     else
     {
-        mFileDescriptor = ::open(path.c_str(), static_cast<int>(flags), static_cast<mode_t>(modes));
+        mFileDescriptor = ::open(mPath.c_str(), static_cast<int>(flags), static_cast<mode_t>(modes));
     }
 
-    if(mFileDescriptor == Status::SYSTEM_ERROR)
+    if(mFileDescriptor == Status<void>::SYSTEM_ERROR)
     {
         mFileDescriptor = INVALID;
         status.createError();
@@ -70,10 +70,10 @@ Status Descriptor::open(const string& newPath, const DescriptorFlags flags, cons
     return status;
 }
 
-Status Descriptor::duplicate(const Descriptor newDescriptor)
+Status<int> Descriptor::duplicate(const Descriptor& newDescriptor)
 {
-    Status status;
-    if(::dup2(mFileDescriptor, newDescriptor) == Status::SYSTEM_ERROR)
+    Status<int> status;
+    if(::dup2(mFileDescriptor, newDescriptor.getDescriptor()) == Status<void>::SYSTEM_ERROR)
     {
         status.createError();
         return status;
