@@ -10,12 +10,23 @@ namespace ecu {
 namespace util
 {
 
+Descriptor::Descriptor()
+: mFileDescriptor(INVALID),
+  mIsOpen(false)
+  {
+      
+  }
+
 Descriptor::Descriptor(const string& path, const DescriptorFlags flags, const FileCreationModes modes)
 :   mPath{path},
     mFileDescriptor{INVALID},
     mIsOpen{false}
 {
-    open(mPath, flags, modes);
+    Status<bool> status = open(mPath, flags, modes);
+    if(status.hasError())
+    {
+        // throw exception
+    }
 }
 
 Descriptor::Descriptor(int fileDescriptor, const std::string& path)
@@ -34,24 +45,28 @@ Descriptor::~Descriptor()
     close();
 }
 
-Status<int> Descriptor::close()
+Status<bool> Descriptor::close()
 {
-    Status<int> status;
-    mPath = "";
-    mIsOpen = false;
+    Status<bool> status{true};
     if(::close(mFileDescriptor) == Status<void>::SYSTEM_ERROR)
     {
-        status.createError();
+        status.createError(false);
     }
-    mFileDescriptor = INVALID;
+    else
+    {
+        mPath = "";
+        mFileDescriptor = INVALID;
+        mIsOpen = false;
+    }
+    
     return status;
 }
 
-Status<int> Descriptor::open(const string& newPath, const DescriptorFlags flags, const FileCreationModes modes)
+Status<bool> Descriptor::open(const string& newPath, const DescriptorFlags flags, const FileCreationModes modes)
 {
     mPath = newPath;
     mIsOpen = true;
-    Status<int> status;
+    Status<bool> status{true};
     if(modes == FileCreationModes::NONE)
     {
         mFileDescriptor = ::open(mPath.c_str(), static_cast<int>(flags));
@@ -61,22 +76,20 @@ Status<int> Descriptor::open(const string& newPath, const DescriptorFlags flags,
         mFileDescriptor = ::open(mPath.c_str(), static_cast<int>(flags), static_cast<mode_t>(modes));
     }
 
-    if(mFileDescriptor == Status<void>::SYSTEM_ERROR)
+    if(mFileDescriptor == INVALID)
     {
-        mFileDescriptor = INVALID;
-        status.createError();
+        status.createError(false);
         mIsOpen = false;
     }
     return status;
 }
 
-Status<int> Descriptor::duplicate(const Descriptor& newDescriptor)
+Status<bool> Descriptor::duplicate(const Descriptor& newDescriptor)
 {
-    Status<int> status;
+    Status<bool> status{true};
     if(::dup2(mFileDescriptor, newDescriptor.getDescriptor()) == Status<void>::SYSTEM_ERROR)
     {
-        status.createError();
-        return status;
+        status.createError(false);
     }
     return status;
 }

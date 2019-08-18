@@ -9,7 +9,7 @@
 namespace ecu {
 namespace util {
 
-template <typename ResultType>
+template <typename ResultType = void>
 class Status
 {
 public:
@@ -99,6 +99,13 @@ public:
         return *this;
     }
 
+    Status& operator=(const ResultType& r)
+    {
+        mError.emplace(nullopt);
+        mResult.emplace(r);
+        mMessage = "Operation completed successfully.";
+    }
+
     void createError()
     {
         CStdError error;
@@ -111,6 +118,14 @@ public:
     {
         mError.emplace(error);
         mResult.emplace(nullopt);
+        mMessage = mError.value().getError();
+    }
+
+    void createError(const ResultType& r)
+    {
+        CStdError error;
+        mError.emplace(error);
+        mResult.emplace(r);
         mMessage = mError.value().getError();
     }
 
@@ -145,6 +160,11 @@ public:
             return mResult.value();
         }
         return ResultType{};
+    }
+
+    void setResult(const ResultType& r)
+    {
+        mResult.emplace(r);
     }
 
     bool hasError() const

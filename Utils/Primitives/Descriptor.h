@@ -35,7 +35,7 @@ public:
         NONE                = 0,
     };
     
-    enum class DescriptorFlags : unsigned int
+    enum class DescriptorFlags : int
     {
         READ_WRITE          = O_RDWR,
         CREATE_FILE         = O_CREAT,
@@ -59,16 +59,17 @@ public:
 
     static constexpr int INVALID = -1;
 
+    Descriptor();
     Descriptor(const std::string& path, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
-    Descriptor() = delete;
     Descriptor(int fileDescriptor, const std::string& path = std::string{""});
+    // TODO: move ctor, copy, etc
     ~Descriptor();
 
-    // assignment
+    // TODO: assignments
 
-    Status<int> close();
-    Status<int> open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
-    Status<int> duplicate(const Descriptor& newDescriptor);
+    Status<bool> close();
+    Status<bool> open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
+    Status<bool> duplicate(const Descriptor& newDescriptor);
 
     int getDescriptor() const;
     std::string getPath() const;
