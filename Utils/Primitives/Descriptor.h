@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
 class Descriptor
@@ -81,6 +81,6 @@ private:
 };
 
 } // util
-} // ecu
+} // ec
 
 #endif  // DESCRIPTOR_H

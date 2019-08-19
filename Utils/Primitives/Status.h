@@ -1,12 +1,12 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-#include "CStdError.h"
+#include "Error.h"
 
 #include <string>
 #include <optional>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
 template <typename ResultType = void>
@@ -26,13 +26,13 @@ public:
       mMessage{"Operation completed successfully."}
     {}
 
-    Status::Status(const CStdError& error)
+    Status::Status(const Error& error)
     : error{error},
       mResult{nullopt},
       mMessage{mError.value().getError()}
     {}
 
-    Status(const ResultType& result, const CStdError& error) 
+    Status(const ResultType& result, const Error& error) 
     : mError{error},
       mResult{result},
       mMessage{mError.value().getError()}
@@ -60,13 +60,13 @@ public:
       mMessage{"Operation completed successfully."}
     {}
 
-    Status(const std::optional<CStdError>& other)
+    Status(const std::optional<Error>& other)
     : mError{other},
       mResult{nullopt},
       mMessage{other.has_value()?other.value().getError():""}
     {}
    
-    Status(const std::optional<ResultType>& otherResult, const std::optional<CStdError>& otherError)
+    Status(const std::optional<ResultType>& otherResult, const std::optional<Error>& otherError)
     : mError{otherError},
       mResult{otherResult},
       mMessage{otherError.has_value()?otherError.value().getError():""}
@@ -108,13 +108,13 @@ public:
 
     void createError()
     {
-        CStdError error;
+        Error error;
         mError.emplace(error);
         mResult.emplace(nullopt);
         mMessage = mError.value().getError();
     }
 
-    void createError(const CStdError& error)
+    void createError(const Error& error)
     {
         mError.emplace(error);
         mResult.emplace(nullopt);
@@ -123,7 +123,7 @@ public:
 
     void createError(const ResultType& r)
     {
-        CStdError error;
+        Error error;
         mError.emplace(error);
         mResult.emplace(r);
         mMessage = mError.value().getError();
@@ -175,12 +175,12 @@ public:
     static constexpr int SYSTEM_ERROR = -1;
     
 private:
-    std::optional<CStdError> mError;
+    std::optional<Error> mError;
     std::optional<ResultType> mResult;
     std::string mMessage;
 };
 
 } // util
-} // ecu
+} // ec
 
 #endif  // STATUS_H

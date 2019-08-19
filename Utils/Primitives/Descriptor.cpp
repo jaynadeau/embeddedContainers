@@ -1,12 +1,12 @@
 #include "Descriptor.h"
 
-#include "CStdError.h"
+#include "Error.h"
 
 #include <unistd.h>
 
 using namespace std;
 
-namespace ecu {
+namespace ec {
 namespace util
 {
 
@@ -110,4 +110,4 @@ bool Descriptor::isValid() const
 }
 
 } // util
-} // ecu
+} // ec

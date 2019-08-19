@@ -1,4 +1,4 @@
-#include "CStdError.h"
+#include "Error.h"
 
 #include <cerrno>
 #include <sstream>
@@ -14,10 +14,10 @@
 
 using namespace std;
 
-namespace ecu {
+namespace ec {
 namespace util {
 
-CStdError::CStdError()
+Error::Error()
 : mErrorNumber{errno}
 {
     char tmpBuf[TMP_BUF_SIZE];
@@ -39,17 +39,17 @@ CStdError::CStdError()
     }
 }
 
-string CStdError::getErrorDescription() const
+string Error::getErrorDescription() const
 {
     return mErrorDescription;
 }
 
-int CStdError::getErrorNumber() const
+int Error::getErrorNumber() const
 {
     return mErrorNumber;
 }
 
-string CStdError::getError() const
+string Error::getError() const
 {
     stringstream ss;
     ss << "Error number: " << mErrorNumber << ", Description: " << mErrorDescription;
@@ -57,4 +57,4 @@ string CStdError::getError() const
 }
 
 } // util
-} // ecu
+} // ec

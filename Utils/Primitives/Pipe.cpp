@@ -1,20 +1,24 @@
 #include "Pipe.h"
 
+#include "EcException.h"
+
 #include <algorithm>
 #include <iterator>
 
 #include <unistd.h>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
 Pipe::Pipe()
 : mIsConnected(false)
 {
     int fdArray[2];
-    if(pipe(fdArray) == -1)
+    if(pipe(fdArray) == Status<>::SYSTEM_ERROR)
     {
+        Error error;
         // throw exception
+        throw EcException{error.getError()};
     }
     std::copy(std::begin(fdArray), std::end(fdArray), std::begin(mDescriptors));
     mIsConnected = true;
@@ -74,4 +78,4 @@ Descriptor Pipe::getWriteEnd() const
 }
 
 } // util
-} // ecu
+} // ec

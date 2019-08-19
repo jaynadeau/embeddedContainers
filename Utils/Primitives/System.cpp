@@ -1,11 +1,11 @@
-#include "CStdSystem.h"
+#include "System.h"
 
 #include <cstdlib>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
-CStdSystem::CStdSystem(const std::string& cmd, const std::string& arguments)
+System::System(const std::string& cmd, const std::string& arguments)
 : mArguments{arguments},
   mCmd{cmd},
   mExitStatus{0},
@@ -16,7 +16,7 @@ CStdSystem::CStdSystem(const std::string& cmd, const std::string& arguments)
     returnValue = std::system(cmdWithArgs.c_str());
     if(returnValue == -1)
     {
-        CStdError error;
+        Error error;
         mExitStatus = error.getErrorNumber();
         mDescription = error.getErrorDescription();
         mSystemSucceeded = false;
@@ -32,7 +32,7 @@ CStdSystem::CStdSystem(const std::string& cmd, const std::string& arguments)
             // child terminated normally but exit code indicates an error occurred in the child process
             if(mExitStatus > 0)
             {
-                CStdError error;
+                Error error;
                 mExitStatus = error.getErrorNumber();
                 mDescription = error.getErrorDescription();
             }
@@ -54,15 +54,15 @@ CStdSystem::CStdSystem(const std::string& cmd, const std::string& arguments)
     }
 }
 
-CStdSystemResult CStdSystem::getResult() const
+SystemResult System::getResult() const
 {
-    return CStdSystemResult{mExitStatus, mCmd + ": " + mDescription};
+    return SystemResult{mExitStatus, mCmd + ": " + mDescription};
 }
 
-bool CStdSystem::isSuccessful() const
+bool System::isSuccessful() const
 {
     return mSystemSucceeded;
 }
 
 } // util
-} // ecu
+} // ec

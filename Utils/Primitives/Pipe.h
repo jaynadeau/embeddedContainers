@@ -6,7 +6,7 @@
 #include <array>
 #include <string>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
 class Pipe
@@ -38,6 +38,6 @@ private:
 };
 
 } // util
-} // ecu
+} // ec
 
 #endif // PIPE_H

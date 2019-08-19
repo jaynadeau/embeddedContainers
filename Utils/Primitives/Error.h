@@ -1,19 +1,19 @@
-#ifndef C_STD_ERROR_H
-#define C_STD_ERROR_H
+#ifndef ERROR_H
+#define ERROR_H
 
 #include <string>
 
-namespace ecu {
+namespace ec {
 namespace util {
 
-class CStdError
+class Error
 {
 public:
-    CStdError();
-    CStdError(const CStdError& other) = default;
-    ~CStdError() = default;
+    Error();
+    Error(const Error& other) = default;
+    ~Error() = default;
 
-    CStdError& operator=(const CStdError& rhs) = default;
+    Error& operator=(const Error& rhs) = default;
 
     std::string getErrorDescription() const;
     int getErrorNumber() const;
@@ -27,6 +27,6 @@ private:
 };
 
 } // util
-} // ecu
+} // ec
 
-#endif  // C_STD_ERROR_H
+#endif  // ERROR_H
