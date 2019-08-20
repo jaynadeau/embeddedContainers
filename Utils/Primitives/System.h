@@ -15,9 +15,11 @@ public:
     System() = delete;
     System(const std::string& cmd, const std::string& arguments = "");
     System(const System& other) = default;
+    System(System&& other) = default;
     virtual ~System() = default;
 
-    System operator=(const System& rhs) = default;
+    System& operator=(const System& rhs) = default;
+    System& operator=(System&& rhs) = default;
 
     SystemResult getResult() const;
     bool isSuccessful() const;

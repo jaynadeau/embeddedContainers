@@ -11,9 +11,11 @@ class Error
 public:
     Error();
     Error(const Error& other) = default;
+    Error(Error&& other) = default;
     ~Error() = default;
 
     Error& operator=(const Error& rhs) = default;
+    Error& operator=(Error&& rhs) = default;
 
     std::string getErrorDescription() const;
     int getErrorNumber() const;

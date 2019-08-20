@@ -62,11 +62,13 @@ public:
     Descriptor();
     Descriptor(const std::string& path, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
     Descriptor(int fileDescriptor, const std::string& path = std::string{""});
-    // TODO: move ctor, copy, etc
+    Descriptor(const Descriptor&) = delete;
+    Descriptor(Descriptor&&) = delete;
     ~Descriptor();
 
-    // TODO: assignments
-
+    Descriptor& operator=(const Descriptor&) = delete;
+    Descriptor& operator=(Descriptor&&) = delete;
+    
     Status<bool> close();
     Status<bool> open(const std::string& newPath, const DescriptorFlags flags = DescriptorFlags::RDWR_CREATE_APPEND, const FileCreationModes modes = FileCreationModes::NONE);
     Status<bool> duplicate(const Descriptor& newDescriptor);

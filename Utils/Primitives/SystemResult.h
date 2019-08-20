@@ -13,9 +13,11 @@ public:
     SystemResult() = delete;
     SystemResult(int returnValue, std::string returnDescription);
     SystemResult(const SystemResult& other) = default;
+    SystemResult(SystemResult&& other) = default;
     virtual ~SystemResult() = default;
 
     SystemResult& operator=(const SystemResult& rhs) = default;
+    SystemResult& operator=(SystemResult&& rhs) = default;
 
     std::string getResultAsString() const;
     int getResultCode() const;

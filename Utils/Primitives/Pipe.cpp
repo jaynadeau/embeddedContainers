@@ -24,6 +24,12 @@ Pipe::Pipe()
     mIsConnected = true;
 }
 
+Pipe::~Pipe()
+{
+    closeReadEnd();
+    closeWriteEnd();
+}
+
 Status<std::string> Pipe::read()
 {
     Status<std::string> status;

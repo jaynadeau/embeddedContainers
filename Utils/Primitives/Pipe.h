@@ -20,7 +20,12 @@ public:
     };
 
     Pipe();
+    Pipe(const Pipe&) = delete;
+    Pipe(Pipe&&) = delete;
     virtual ~Pipe();
+
+    Pipe& operator=(const Pipe&) = delete;
+    Pipe& operator=(Pipe&&) = delete;
 
     Status<std::string> read();
     Status<bool> write(const std::string& strBuffer);

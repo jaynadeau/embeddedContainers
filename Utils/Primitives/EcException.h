@@ -12,7 +12,12 @@ class EcException : public std::exception
 public:
     EcException() = delete;
     explicit EcException(const std::string& what);
+    EcException(const EcException&) = default;
+    EcException(EcException&&) = default;
     virtual ~EcException() = default;
+
+    EcException& operator=(const EcException&) = default;
+    EcException& operator=(EcException&&) = default;
 
     virtual std::string what();
 private:

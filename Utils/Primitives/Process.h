@@ -10,12 +10,12 @@ class Process
 {
 public:
     Process();
+    Process(const Process&) = default;
+    Process(Process&&) = default;
     virtual ~Process() = default;
 
-    Process(const Process&) = delete;
-    Process(Process&&) = delete;
-    Process& operator=(const Process&) = delete;
-    Process& operator=(Process&&) = delete;
+    Process& operator=(const Process&) = default;
+    Process& operator=(Process&&) = default;
 
     bool isChild() const;
 private:
