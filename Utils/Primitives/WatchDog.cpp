@@ -1,23 +1,8 @@
-//
-// CONFIDENTIAL - FORD MOTOR COMPANY
-//
-// This is an unpublished work, which is a trade secret, created in
-// 2019.  Ford Motor Company owns all rights to this work and intends
-// to maintain it in confidence to preserve its trade secret status.
-// Ford Motor Company reserves the right to protect this work as an
-// unpublished copyrighted work in the event of an inadvertent or
-// deliberate unauthorized publication.  Ford Motor Company also
-// reserves its rights under the copyright laws to protect this work
-// as a published work.  Those having access to this work may not copy
-// it, use it, or disclose the information contained in it without
-// the written authorization of Ford Motor Company.
-//
-#include <util/WatchDog.h>
+#include <WatchDog.h>
 
-#include <util/CStdError.h>
-#include <util/file_util.h>
-#include <util/string_util.h>
-#include <quip_logging.h>
+#include <CStdError.h>
+#include <file_util.h>
+#include <string_util.h>
 
 #include <algorithm>
 #include <cctype>
@@ -64,20 +49,16 @@ WatchDog::WatchDog(const std::string& processToWatch, std::chrono::seconds timeo
                                 {
                                     CStdError error;
                                     // print out error
-                                    QUIP_PRINT(nullptr, LV0, "Could not kill process %s, kill() returned an error: %s.", mProcessToWatch.c_str(), error.getErrorAsString().c_str());
                                 }
-                                QUIP_PRINT(nullptr, LV4, "Killed pid: %d, from process: %s with parent: %d.", processId, mProcessToWatch.c_str(), process.getParentPid());
                             }
                             else
                             {
-                                QUIP_PRINT(nullptr, LV2, "Invalid pid: %d, from process: %s.", processId, mProcessToWatch.c_str());
                             }
                         }
                     }
                 }
                 catch(const std::system_error& se_exception)
                 {
-                    QUIP_PRINT(nullptr, LV0, "System error exception thrown: %s.", se_exception.what());
                 }
             }, mTimeout, mProcessToWatch
         };
@@ -115,7 +96,6 @@ void WatchDog::wait()
 
 WatchDog::~WatchDog()
 {
-    QUIP_PRINT(nullptr, LV0, "Waiting for WatchDog timeout thread in WatchDog destructor.");
     cancelAndWait();
 }
 

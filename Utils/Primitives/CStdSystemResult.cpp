@@ -1,4 +1,4 @@
-#include <util/CStdSystemResult.h>
+#include "CStdSystemResult.h"
 
 namespace ec {
 namespace util {

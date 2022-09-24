@@ -1,7 +1,7 @@
 #ifndef WATCH_DOG_H
 #define WATCH_DOG_H
 
-#include <util/ProcessInfo.h>
+#include <ProcessInfo.h>
 
 #include <chrono>
 #include <condition_variable>

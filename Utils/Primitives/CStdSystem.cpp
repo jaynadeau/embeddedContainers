@@ -1,5 +1,5 @@
-#include <util/CStdSystem.h>
-#include <util/WatchDog.h>
+#include <CStdSystem.h>
+#include <WatchDog.h>
 
 #include <cstdlib>
 

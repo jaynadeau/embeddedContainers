@@ -1,4 +1,4 @@
-/#ifndef C_STD_SYSTEM_RESULT_H
+#ifndef C_STD_SYSTEM_RESULT_H
 #define C_STD_SYSTEM_RESULT_H
 
 #include <string>

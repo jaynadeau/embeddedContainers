@@ -1,7 +1,7 @@
-#include <util/ProcessInfo.h>
+#include <ProcessInfo.h>
 
-#include <util/CStdError.h>
-#include <util/string_util.h>
+#include <CStdError.h>
+#include <string_util.h>
 
 #include <algorithm>
 #include <fstream>
