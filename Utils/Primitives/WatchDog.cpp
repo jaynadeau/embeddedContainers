@@ -1,8 +1,6 @@
 #include <WatchDog.h>
 
 #include <CStdError.h>
-#include <file_util.h>
-#include <string_util.h>
 
 #include <algorithm>
 #include <cctype>
@@ -12,14 +10,8 @@
 
 #include <signal.h>
 #include <sys/types.h>
-#if defined(__QNXNTO__)
-#include <process.h>
-#else
 #include <unistd.h>
-#endif
 
-namespace fnv {
-namespace reconn {
 namespace util {
 
 WatchDog::WatchDog(const std::string& processToWatch, std::chrono::seconds timeout)
@@ -36,8 +28,7 @@ WatchDog::WatchDog(const std::string& processToWatch, std::chrono::seconds timeo
                     std::unique_lock<std::mutex> lock(mMx);
                     // if predicate is still false, then we have timed out, kill the process 
                     if(!mCv.wait_for(lock, timeout, [this]{return mCancelWatch;}))
-                    {  
-                        QUIP_PRINT(nullptr, LV4, "Process %s timed out after %d seconds and will be killed.", mProcessToWatch.c_str(), timeout);
+                    {
                         // kill process after timeout
                         convertProcessNameToPid();
                         for(const auto& process : mProcesses)
@@ -99,6 +90,4 @@ WatchDog::~WatchDog()
     cancelAndWait();
 }
 
-} // util
-} // reconn
-} // fnv
+}
